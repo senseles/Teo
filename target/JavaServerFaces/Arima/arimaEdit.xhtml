@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:com="http://mkyong.com/facelets">
+
+<h:head>
+    <title>Price volatilyti forecast Online</title>
+</h:head>
+<h:body>
+    <ui:decorate template="/WEB-INF/templates/defaultLayout.xhtml"></ui:decorate>
+    <h:form>
+        <p></p>
+        <p:panelGrid
+            id="commissionSelectEditId"
+            columns="2"
+            style="width:100%">
+            <f:facet name="header">
+                <p:row>
+                    <p:column>Duomenu suvedimas</p:column>
+                </p:row>
+            </f:facet>
+            <p:row>
+                <p:column styleClass="labelColumn">
+                    <p:outputLabel value="Pasirinkti duomenu rinkini:" />
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:commandButton
+                        value="Prideti duomenu rinkini"
+                        onclick="PF('fileUploadDialog').show()"
+                        type="button" />
+                    <p:outputLabel value="#{fileUploadView.fileName}" />
+                    <p:outputLabel value="#{fileUploadView.fileContent}" />
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column styleClass="labelColumn">
+                    <p:outputLabel value="Analizuoti duomenys:" />
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:commandButton
+                        value="Analize"
+                        action="#{fileUploadView.arimaDataGenerate()}" />
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column styleClass="labelColumn">
+                    <p:chart
+                        type="line"
+                        model="#{chartView.lineModel1}"
+                        style="height:300px;" />
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column styleClass="labelColumn">
+                    <p:chart
+                        type="line"
+                        model="#{chartView.lineModel2}"
+                        style="height:300px;" />
+                </p:column>
+            </p:row>
+        </p:panelGrid>
+        <p style="height: 180px"></p>
+        <com:button />
+    </h:form>
+    <com:projectDialog />
+</h:body>
+</html>

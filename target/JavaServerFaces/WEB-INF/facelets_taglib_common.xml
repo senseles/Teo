@@ -1,0 +1,15 @@
+<facelet-taglib>
+    <namespace>http://mkyong.com/facelets</namespace>
+    <tag>
+        <tag-name>button</tag-name>
+        <source>../component/button.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>menu</tag-name>
+        <source>../component/menu.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>projectDialog</tag-name>
+        <source>../dialog/projectDialog.xhtml</source>
+    </tag> 
+</facelet-taglib>

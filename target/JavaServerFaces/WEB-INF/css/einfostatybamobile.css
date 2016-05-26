@@ -1,0 +1,3 @@
+.panelWithoutHeader .ui-panel-m-titlebar.ui-bar.ui-bar-inherit {
+    display: none !important;
+}

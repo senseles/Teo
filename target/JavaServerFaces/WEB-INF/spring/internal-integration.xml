@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-jpa="http://www.springframework.org/schema/integration/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/jpa http://www.springframework.org/schema/integration/jpa/spring-integration-jpa.xsd">
+
+	<int:channel id="certifiedPersonInChannel" />
+
+	<int:channel id="certifiedPersonOutChannel" />
+
+	<int-jpa:outbound-channel-adapter
+		auto-startup="true" channel="certifiedPersonOutChannel"
+		entity-manager-factory="entityManagerFactory">
+	</int-jpa:outbound-channel-adapter>
+
+	<int-jpa:inbound-channel-adapter
+		auto-startup="true" channel="certifiedPersonInChannel"
+		entity-manager-factory="entityManagerFactory" jpa-query="select cpo from CertifiedPersonOfficial cpo">
+		<int:poller fixed-rate="3600000">
+			<int:transactional transaction-manager="transactionManager" />
+		</int:poller>
+	</int-jpa:inbound-channel-adapter>
+
+	<int:chain auto-startup="true" input-channel="certifiedPersonInChannel"
+		output-channel="certifiedPersonOutChannel">
+		<int:splitter />
+		<int:transformer ref="certifiedPersonTransformer" />
+	</int:chain>
+
+</beans>

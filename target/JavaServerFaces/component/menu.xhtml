@@ -1,0 +1,39 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    <p:megaMenu
+        orientation="horizontal"
+        style="margin-top:20px">
+        <p:submenu label="Kainų prognozavimas">
+            <p:column>
+                <p:submenu label="Kainų prognozavimas Matlab modeliais">
+                    <p:menuitem
+                        value="Arima"
+                        outcome="arimaEdit" />
+                    <p:menuitem
+                        value="Garch"
+                        url="#" />
+                    <p:menuitem
+                        value="Armach"
+                        url="#" />
+                    <p:menuitem
+                        value="E-Garch"
+                        url="#" />
+                    <p:menuitem
+                        value="Arma"
+                        url="#" />
+                </p:submenu>
+            </p:column>
+            <p:column>
+                <p:submenu
+                    label="Kainų prognozavimas Svertiniais modeliais">
+                    <p:menuitem
+                        value="Slenkantis vidurkis"
+                        url="#" />
+                </p:submenu>
+            </p:column>
+        </p:submenu>
+    </p:megaMenu>
+</ui:composition>

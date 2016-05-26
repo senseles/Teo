@@ -1,0 +1,61 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <jpa:repositories base-package="lt.asseco.einfostatyba.repository, lt.asseco.um.data.repository, lt.asseco.common.document.repository" />
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    <alias name="transactionManager" alias="tx.core"/>
+    <alias name="transactionManager" alias="tx.um"/>
+    <alias name="transactionManager" alias="tx.events"/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" primary="true">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan">
+            <list>
+                <!-- infostatyba -->
+                <value>lt.asseco</value>
+                <!-- um -->
+                <value>lt.asseco.user_management</value>
+                <!-- classif -->
+                <value>lt.asseco.sisd.jpa.eclipselink.model.classificator</value>
+                <!-- events -->
+                <value>lt.sintagma.events.async.model</value>
+            </list>
+        </property>
+        <property name="jpaVendorAdapter" ref="jpaAdapter" />
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+            </props>
+        </property>
+    </bean>
+    <alias name="entityManagerFactory" alias="jpa.um"/>
+    <alias name="entityManagerFactory" alias="classificator"/>
+    <alias name="entityManagerFactory" alias="jpa.events"/>
+
+    <bean id="jpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="databasePlatform" value="${hibernate.dialect}" />
+        <property name="generateDdl" value="false" />
+        <property name="showSql" value="false" />
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${datasource.driver}" />
+        <property name="jdbcUrl" value="${datasource.url}" />
+        <property name="user" value="${datasource.user}" />
+        <property name="password" value="${datasource.password}" />
+    </bean>
+
+</beans>

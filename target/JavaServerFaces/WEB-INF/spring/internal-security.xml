@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <sec:http pattern="/javax.faces.resource/**" security="none" />
+    <sec:http pattern="/resources/images/**" security="none" />
+    <sec:http pattern="/ExternalUMRegisterService/**" security="none" />
+
+    <sec:http auto-config="false" use-expressions="true"
+        entry-point-ref="formLoginEntryPoint"
+        authentication-manager-ref="authentication-manager">
+
+        <sec:intercept-url pattern="/public/**"
+            access="permitAll" />
+            
+        <sec:intercept-url pattern="/gis/**"
+            access="permitAll" />
+            
+        <sec:intercept-url pattern="/paymentNotification/**" access="permitAll" />
+        
+        <sec:intercept-url pattern="/rest/**"
+            access="permitAll" />
+        
+        <sec:intercept-url pattern="/ws/**"
+            access="permitAll" />
+            <!--access="hasIpAddress('192.168.2.0/24')" />-->
+
+        <!--<sec:intercept-url pattern="/webServiceResults/**"
+            access="permitAll" />-->
+        
+        <sec:anonymous />
+
+        <!-- juridicalPerson -->
+        <sec:intercept-url pattern="/subject/juridicalPerson*"
+            access="hasAuthority('um-manage-juridicalPersons')" />
+
+        <!-- naturalPerson -->
+        <sec:intercept-url pattern="/subject/naturalPerson*"
+            access="hasAuthority('um-manage-naturalPersons')" />
+
+        <!-- organization -->
+        <sec:intercept-url pattern="/subject/organization*"
+            access="hasAuthority('um-manage-organizations')" />
+
+        <!-- groups -->
+        <sec:intercept-url pattern="/group/group*"
+            access="hasAuthority('um-manage-groups')" />
+
+        <!-- roles -->
+        <sec:intercept-url pattern="/role/role*"
+            access="hasAuthority('um-manage-roles')" />
+
+        <!-- permission -->
+        <sec:intercept-url pattern="/permission/permission*"
+            access="hasAuthority('um-manage-persission')" />
+
+        <!-- orgUserProfile -->
+        <sec:intercept-url pattern="/user/orgUserProfile*"
+            access="isFullyAuthenticated()" />
+
+        <!-- orgUser -->
+        <sec:intercept-url pattern="/user/orgUser*"
+            access="hasAuthority('um-manage-users')" />
+
+        <!-- personUserProfile -->
+        <sec:intercept-url pattern="/user/personUserProfile*"
+            access="isFullyAuthenticated()" />
+
+        <!-- personUser -->
+        <sec:intercept-url pattern="/user/personUser*"
+            access="hasAuthority('um-manage-users')" />
+
+        <!-- project -->
+        <sec:intercept-url pattern="/project/projectSearch*"
+            access="hasAuthority('is-doc-view')" />
+        <sec:intercept-url pattern="/project/projectCreate*"
+            access="hasAuthority('is-doc-edit')" />
+            
+         <!-- application document -->   
+        <sec:intercept-url pattern="/document/application/applicationSearch*"
+            access="hasAuthority('is-doc-view')" />
+        <sec:intercept-url pattern="/document/application/applicationCreate*"
+            access="hasAuthority('is-doc-edit')" />
+        <sec:intercept-url pattern="/document/application/applicationEdit*"
+            access="hasAuthority('is-doc-edit')" />
+            
+         <!-- check project -->   
+        <sec:intercept-url pattern="/document/checkProject/checkProjectSearch*"
+            access="hasAuthority('is-doc-view')" />   
+        <sec:intercept-url pattern="/document/checkProject/checkProjectResultSearch*"
+            access="hasAuthority('is-doc-view')" />
+            
+         <!-- permit -->   
+        <sec:intercept-url pattern="/document/permit/permitSearch*"
+            access="hasAuthority('is-doc-view')" /> 
+            
+         <!-- statement -->   
+        <sec:intercept-url pattern="/document/statement/statementSearch*"
+            access="hasAuthority('is-doc-view')" /> 
+            
+         <!-- act -->   
+        <sec:intercept-url pattern="/document/act/actSearch*"
+            access="hasAuthority('is-doc-view')" /> 
+        <sec:intercept-url pattern="/document/act/actCreate*"
+            access="hasAuthority('is-doc-edit')" />
+        <sec:intercept-url pattern="/document/act/actEdit*"
+            access="hasAuthority('is-doc-edit')" />
+            
+         <!-- offence -->   
+        <sec:intercept-url pattern="/document/offence/offenceSearch*"
+            access="hasAuthority('is-doc-view')" /> 
+        <sec:intercept-url pattern="/document/offence/offenceCreate*"
+            access="hasAuthority('is-doc-edit')" />
+        <sec:intercept-url pattern="/document/offence/offenceEdit*"
+            access="hasAuthority('is-doc-edit')" />
+            
+         <!-- state supervision -->   
+        <sec:intercept-url pattern="/stateSupervision/commission/commissions*"
+            access="hasAuthority('is-doc-view')" /> 
+        <sec:intercept-url pattern="/stateSupervision/commission/commissionCreate*"
+            access="hasAuthority('is-doc-edit')" />
+            
+         <!-- verification act -->   
+        <sec:intercept-url pattern="/document/verificationAct/verificationActSearch*"
+            access="hasAuthority('is-doc-view')" /> 
+        <sec:intercept-url pattern="/document/verificationAct/verificationActCreate*"
+            access="hasAuthority('is-doc-edit')" />
+        <sec:intercept-url pattern="/document/verificationAct/verificationActEdit*"
+            access="hasAuthority('is-doc-edit')" />
+            
+         <!-- activity rating -->   
+        <sec:intercept-url pattern="/document/activityRating/activityRatingSearch*"
+            access="hasAuthority('is-doc-view')" /> 
+            
+         <!-- payment search -->   
+        <sec:intercept-url pattern="/payment/paymentSearch*"
+            access="hasAuthority('is-doc-view')" />  
+
+        <sec:intercept-url pattern="/**"
+            access="isFullyAuthenticated()" />
+    </sec:http>
+
+    <bean id="formLoginEntryPoint"
+        class="lt.asseco.um.auth.IntLoginUrlAuthenticationEntryPoint">
+        <constructor-arg value="/views/public/login.xhtml" />
+        <property name="forceHttps" value="false" />
+        <property name="mobileLoginFormUrl" value="/views/public/mobileLogin.xhtml" />
+    </bean>
+    
+    <bean id="authenticationProcessingController"
+        class="lt.asseco.sisd.web.security.WebAuthenticationProcessorBasedOnAuthenticationFilter">
+        <property name="authenticationManager" ref="authentication-manager" />
+        <property name="authenticationSuccessHandler">
+            <bean
+                class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+                <property name="defaultTargetUrl" value="/views/index.xhtml" />
+                <property name="redirectStrategy">
+                    <bean
+                        class="lt.asseco.sisd.web.security.JsfRedirectStrategy" />
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="internalUsersAuthProvider"
+        class="lt.asseco.user_administration.security.InternalUserAuthenticationProvider" />
+    <bean id="principalIdAuthProvider"
+        class="lt.asseco.user_administration.security.PrincipalIdAuthenticationProvider" />
+
+    <sec:authentication-manager id="authentication-manager">
+        <sec:authentication-provider ref="internalUsersAuthProvider" />
+        <sec:authentication-provider ref="principalIdAuthProvider" />
+    </sec:authentication-manager>
+
+    <bean id="passwordRulesConfig"
+        class="lt.asseco.user_management.register.config.PasswordRulesConfig"
+        scope="singleton">
+        <property name="passwordValidDays" value="${password.validDays}" />
+        <property name="passwordMinLength" value="${password.length}" />
+        <property name="previousUniquePasswordNo"
+            value="${password.noOfPreviousPasswordsUnique}" />
+        <property name="maximumFailedAttempts" value="${password.maxFailedAttempts}" />
+        <property name="minimumCapitalLetters" value="${password.noOfUppercase}" />
+        <property name="minimumDigits" value="${password.noOfDigits}" />
+    </bean>
+</beans>
+

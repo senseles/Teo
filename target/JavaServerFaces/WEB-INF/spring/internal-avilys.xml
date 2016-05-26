@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:soap="http://cxf.apache.org/bindings/soap" xmlns:cxf="http://cxf.apache.org/core"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://cxf.apache.org/bindings/soap 
+        http://cxf.apache.org/schemas/configuration/soap.xsd
+        http://cxf.apache.org/jaxws 
+        http://cxf.apache.org/schemas/jaxws.xsd
+        http://cxf.apache.org/core 
+        http://cxf.apache.org/schemas/core.xsd">
+
+    <!-- spring based cxf clients -->
+    <bean id="ws-avilys-wss4j-out" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor"
+        autowire-candidate="false">
+        <constructor-arg>
+            <map>
+                <entry key="action" value="UsernameToken" />
+                <entry key="user" value="${avilys.ws.user.name}" />
+                <entry key="passwordType" value="PasswordText" />
+                <entry key="passwordCallbackRef">
+                    <bean
+                        class="lt.asseco.einfostatyba.ws.avilys.AvilysPasswordCallback">
+                        <property name="wsPass" value="${avilys.ws.user.pass}"></property>
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging />
+        </cxf:features>
+    </cxf:bus>
+
+    <!-- Avilys RDODOcuemtns client -->
+    <jaxws:client id="rdoDocumentClient" serviceName="RDODocumentWS"
+        serviceClass="lt.sintagma.avilys.rdodocumentws.RDODocumentWS"
+        address="${avilys.wsdl.url}RDODocumentWS">
+        <jaxws:outInterceptors>
+            <ref bean="ws-avilys-wss4j-out" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
+
+    <!-- Avilys TDODocuemtns client -->
+    <jaxws:client id="tdoDocumentClient" serviceName="TDODocumentWS"
+        serviceClass="lt.sintagma.avilys.tdodocumentws.TDODocumentWS"
+        address="${avilys.wsdl.url}TDODocumentWS">
+        <jaxws:outInterceptors>
+            <ref bean="ws-avilys-wss4j-out" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
+
+    <!-- Avilys DocLink client -->
+    <jaxws:client id="docLinkClient" serviceName="DocLinkWS"
+        serviceClass="lt.sintagma.avilys.doclinkws.DocLinkWS" address="${avilys.wsdl.url}DocLinkWS">
+        <jaxws:outInterceptors>
+            <ref bean="ws-avilys-wss4j-out" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
+
+    <!-- Avilys ContactWS client -->
+    <jaxws:client id="contactClient" serviceName="ContactWS"
+        serviceClass="lt.sintagma.avilys.contactws.ContactWS" address="${avilys.wsdl.url}ContactWS">
+        <jaxws:outInterceptors>
+            <ref bean="ws-avilys-wss4j-out" />
+        </jaxws:outInterceptors>
+    </jaxws:client>
+
+    <bean id="avilysWSService"
+        class="lt.asseco.einfostatyba.ws.avilys.service.impl.AvilysWSServiceImpl" />
+        
+    <bean id="avilysOrgConfigService"
+        class="lt.asseco.einfostatyba.ws.avilys.service.impl.AvilysOrgConfigServiceImpl" />
+</beans>

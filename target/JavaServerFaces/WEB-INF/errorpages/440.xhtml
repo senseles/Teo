@@ -1,0 +1,16 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/errorLayout.xhtml">
+
+    <ui:define name="content">
+        <p:panel header="#{res['label.error.440']}">
+            <h3>
+                <h:outputText value="#{messages['error.440']}" />
+            </h3>
+            <h:outputScript rendered="#{facesContext.partialViewContext.ajaxRequest}">scrollTo(0, 0);</h:outputScript>
+        </p:panel>
+    </ui:define>
+</ui:composition>

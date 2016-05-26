@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- START SNIPPET: beans -->
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:cxf="http://cxf.apache.org/core"  
+       xsi:schemaLocation="http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd 
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+    
+    <jaxws:endpoint id="internalWS" implementor="#cxf.internalWS" address="/InternalWS" bus="cxf-internalWS"/>
+    
+    <bean id="cxf.internalWS" class="lt.asseco.einfostatyba.ws.internal.InternalWSImpl">
+        <property name="documentService" ref="documentServiceImpl" />
+        <property name="documentSearchService" ref="documentSearchServiceImpl" />
+        <property name="organizationService" ref="organizationServiceImpl" />
+        <property name="subjectService" ref="subjectServiceImpl" />
+        <property name="constructionTypeRepository" ref="constructionTypeRepository" />
+        <property name="constructionPurposeRepository" ref="constructionPurposeRepository" />
+        <property name="constructionCategoryRepository" ref="constructionCategoryRepository" />
+        <property name="participantTypeRepository" ref="participantTypeRepository" />
+        <property name="documentTypeRepository" ref="documentTypeRepository" />
+        <property name="documentStateRepository" ref="documentStateRepository" />
+        <property name="legalActArticleRepository" ref="legalActArticleRepository" />
+        <property name="attachmentHierarchyService" ref="attachmentHierarchyServiceImpl" />
+        <property name="taskStateRepository" ref="taskStateRepository" />
+        <property name="legalActArticleService" ref="legalActArticleServiceImpl" />
+        <property name="landPurposeRepository" ref="landPurposeRepository" />
+        <property name="questionStructRepository" ref="questionStructRepository" />
+        <property name="accessConditionTypeRepository" ref="accessConditionTypeRepository" />
+        <property name="indicatorUnitRepository" ref="indicatorUnitRepository" />
+        <property name="roomActionTypeRepository" ref="roomActionTypeRepository" />
+        <property name="roomPurposeRepository" ref="roomPurposeRepository" />
+        <property name="paymentTypeRepository" ref="paymentTypeRepository" />
+        <property name="tollRepository" ref="tollRepository" />
+        <property name="currencyRepository" ref="currencyRepository" />
+    </bean>    
+    
+    <bean id="cxf.usernameTokenValidator" class="lt.asseco.infostatyba.ws.core.authorization.WSUsernameTokenValidator">
+        <property name="userAuthenticationProvider" ref="internalUsersAuthProvider" />
+        <property name="eventNotificationService" ref="eventNotificationService" />
+    </bean>    
+    
+    <cxf:bus bus="cxf-internalWS">
+        <cxf:inInterceptors>
+            <bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+                <constructor-arg>
+                    <map>
+                        <entry key="#{T(org.apache.wss4j.dom.handler.WSHandlerConstants).ACTION}" value="#{T(org.apache.wss4j.dom.handler.WSHandlerConstants).USERNAME_TOKEN}"/>
+                        <entry key="#{T(org.apache.wss4j.dom.handler.WSHandlerConstants).PASSWORD_TYPE}" value="#{T(org.apache.wss4j.dom.WSConstants).PW_TEXT}"/>
+                    </map>
+                </constructor-arg>
+            </bean>
+        </cxf:inInterceptors>
+        <cxf:properties>
+            <entry key="mtom-enabled" value="true"/>
+            <entry key="#{T(org.apache.cxf.ws.security.SecurityConstants).USERNAME_TOKEN_VALIDATOR}">
+                <ref bean="cxf.usernameTokenValidator"/>
+            </entry>
+            <entry key="schema-validation-enabled" value="false" />  
+        </cxf:properties>
+    </cxf:bus>   
+</beans>
+<!-- END SNIPPET: beans -->
